@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Be My Valentine?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffe6f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card {
+      position: relative;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      max-width: 400px;
+      z-index: 1;
+    }
+
+    #message {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .yes {
+      background: #ff4d88;
+      color: white;
+      margin: 10px;
+    }
+
+    .no {
+      background: #ccc;
+      position: absolute;
+    }
+
+    .one-more {
+      background: #6a0dad;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      color: red;
+      animation: floatUp 2s linear forwards;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-150px) scale(1.5); }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div id="message">Will you be my Valentine? 💕</div>
+    <div id="buttons">
+      <button class="yes" onclick="sayYes()">Yes</button>
+      <button class="no" id="noBtn" onclick="sayNo()">No</button>
+    </div>
+  </div>
+
+  <script>
+    let noCount = 0;
+    const noBtn = document.getElementById('noBtn');
+    const card = document.querySelector('.card');
+    const buttonsDiv = document.getElementById('buttons');
+
+    function sayYes() {
+      createHearts(10);
+      document.getElementById("message").innerHTML = "YAAAAAY PAROLA E ^teiubescdemicrapaochii^ &lt;3333 💖🎉";
+      buttonsDiv.style.display = "none";
+    }
+
+    function sayNo() {
+      noCount++;
+      createHearts(3);
+
+      if (noCount < 6) {
+        document.getElementById("message").innerText = "Try again 😏";
+        moveNoButton();
+      } else {
+        document.getElementById("message").innerText = "stop playing with me :((";
+        noBtn.style.display = "none";
+        addOneMoreChanceButton();
+      }
+    }
+
+    function moveNoButton() {
+      const cardRect = card.getBoundingClientRect();
+      const btnWidth = noBtn.offsetWidth;
+      const btnHeight = noBtn.offsetHeight;
+
+      const maxX = cardRect.width - btnWidth;
+      const maxY = cardRect.height - btnHeight;
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+
+      noBtn.style.left = randomX + "px";
+      noBtn.style.top = randomY + "px";
+    }
+
+    function createHearts(count) {
+      for(let i=0; i<count; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerText = '❤️';
+        heart.style.left = Math.random() * (window.innerWidth - 30) + 'px';
+        heart.style.top = Math.random() * (window.innerHeight - 30) + 'px';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 2000);
+      }
+    }
+
+    function addOneMoreChanceButton() {
+      const oneMoreBtn = document.createElement('button');
+      oneMoreBtn.innerText = "One more chance 💜";
+      oneMoreBtn.className = "one-more";
+      oneMoreBtn.onclick = resetGame;
+      card.appendChild(oneMoreBtn);
+    }
+
+    function resetGame() {
+      noCount = 0;
+      document.getElementById("message").innerText = "Will you be my Valentine? 💕";
+      noBtn.style.display = "inline-block";
+      noBtn.style.left = "0px";
+      noBtn.style.top = "0px";
+
+      // remove one-more button
+      const oneMoreBtn = document.querySelector(".one-more");
+      if(oneMoreBtn) oneMoreBtn.remove();
+    }
+  </script>
+</body>
+</html>
